@@ -68,4 +68,56 @@ describe('TODOMvc App', () => {
       .children()
       .should('have.length', 2);
   });
+
+  it('Testa a deleção de tarefas com reload', () => {
+    cy.visit('');
+
+    cy.get('[data-cy=todo-input]')
+      .type('Lista de LP{enter}')
+      .type('Lista de ISL{enter}');
+
+    cy.reload();
+
+    cy.get('[data-cy=todos-list]')
+      .children()
+      .should('have.length', 0)
+  });
+
+  it('Testa a quantidade de tarefas', () => {
+    cy.visit('');
+
+    cy.get('[data-cy=todo-input]')
+      .type('Listas de LP{enter}')
+      .type('TP de ICD{enter}')
+      .type('Prova de ALC{enter}');
+
+    cy.get('.todo-count')
+      .should('have.text', '3 items left');
+
+    cy.get('.toggle-all-label')
+      .should('exist')
+      .click();
+    
+    cy.get('.todo-count')
+      .should('have.text', '0 items left');
+  });
+
+  it('Testa edição de tarefas', () => {
+    cy.visit('');
+
+    cy.get('[data-cy=todo-input]')
+      .type('Teste de ES{enter}');
+
+    cy.get('[data-cy=todos-list] > li')
+      .first()
+      .dblclick();
+
+    cy.get('[data-cy=todo-edit-input]')
+      .clear()
+      .type('Teste 10 de ES{enter}');
+
+    cy.get('[data-cy=todos-list] > li')
+      .first()
+      .should('have.text', 'Teste 10 de ES');
+  });
 });
